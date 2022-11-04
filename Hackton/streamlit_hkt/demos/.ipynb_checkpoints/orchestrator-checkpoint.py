@@ -8,20 +8,28 @@ def show_examples():
 
     st.write(
         """
-        # 📸 st.camera_input
         
-        We are launching a new widget, which lets the user take an image through their 
-        webcam and upload it to the app! Use it with:
-        
-        ```python
-        img_file = st.camera_input("Take a picture")
-        ```
-        
-        More info in [our docs](https://docs.streamlit.io/library/api-reference/widgets/st.camera_input).
+        # 환경을 아끼는 방법
         
         ---
         
-        And here's a demo that lets you apply a filter to the uploaded image:
+        1. 쓰레기를 깔끔하게 모아둔다.
+        
+        2. 처리방법을 알고싶은 쓰레기를 촬영한다.
+        
+        #### 3. AI 퀴즈를 풀고 리워드를 받는다!
+        
+        4. 구체적인 폐기방법을 알게 된다.
+        
+        ### 5. 환경보호에 힘쓴다!
+        
+        
+        
+        
+        ---
+        
+        
+        
         """
     )
 

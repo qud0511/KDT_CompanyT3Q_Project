@@ -35,7 +35,7 @@ def show():
         img = preprocess(img)
         return img
 
-    picture = st.camera_input("First, take a picture...")
+    picture = st.camera_input("분리수거하고 싶은 쓰레기를 찍어주세요!")
 
     filters_to_funcs = {
         "No filter": none,
@@ -44,7 +44,7 @@ def show():
         "Sketch": sketch,
         "Grayscale": gray
     }
-    filters = st.selectbox("...and now, apply a filter!", filters_to_funcs.keys())
+    filters = st.selectbox("퀴즈를 맞춰주세요!", filters_to_funcs.keys())
     
     if picture:
         st.image(filters_to_funcs[filters](picture), channels="BGR")
