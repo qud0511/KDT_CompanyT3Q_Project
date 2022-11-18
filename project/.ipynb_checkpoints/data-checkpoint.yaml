@@ -1,0 +1,14 @@
+names:
+- Animals(Dolls)
+- Person
+- Garbage bag & sacks
+- Construction signs & Parking prohibited board
+- Traffic cone
+- Box
+- Stones on road
+- Pothole on road
+- Filled pothole
+- Manhole
+nc: 10
+train: C:\DataScience\T3Q\data\DownsamplingData\TrainingData\train.txt
+val: C:\DataScience\T3Q\data\DownsamplingData\TrainingData\val.txt
