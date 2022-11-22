@@ -1,3 +1,8 @@
+# https://turtlefromocean.tistory.com/9
+# https://github.com/muhk01/Yolov5-on-Flask
+# https://iagreebut.tistory.com/122
+
+
 from flask import Flask, request, redirect, make_response, render_template
 import io
 from PIL import Image
