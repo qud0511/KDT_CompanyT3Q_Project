@@ -1,124 +1,70 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, make_response, render_template
+import io
+from PIL import Image
+import cv2
+import torch
+from werkzeug.exceptions import BadRequest
+import os
 
 app = Flask(__name__)
 
+# create a python dictionary for your models d = {<key>: <value>, <key>: <value>, ..., <key>: <value>}
+dictOfModels = {}
+# create a list of keys to use them in the select part of the html code
+listOfKeys = []
+for r, d, f in os.walk("models_train"):
+    for file in f:
+        if ".pt" in file:
+            # example: file = "model1.pt"
+            # the path of each model: os.path.join(r, file)
+            dictOfModels[os.path.splitext(file)[0]] = torch.hub.load('ultralytics/yolov5', 'custom', path=os.path.join(r, file), force_reload=True)
+            # you would obtain: dictOfModels = {"model1" : model1 , etc}
+    for key in dictOfModels :
+        listOfKeys.append(key)     # put all the keys in the listOfKeys
+    print(listOfKeys)
 
-nextId = 4
-topics = [
-    {'id': 1, 'title': 'html', 'body': 'html is ...'},
-    {'id': 2, 'title': 'css', 'body': 'css is ...'},
-    {'id': 3, 'title': 'javascript', 'body': 'javascript is ...'}
-]
+# 추론함수를 작성합니다.
+def get_prediction(img_bytes,model):
+    img = Image.open(io.BytesIO(img_bytes))
+    # inference
+    results = model(img, size=640)  
+    return results
 
+# GET메서드를 정의합니다.
+@app.route('/', methods=['GET'])
+def get():
+  # in the select we will have each key of the list in option
+  return render_template("index.html", len = len(listOfKeys), listOfKeys = listOfKeys)
 
-def template(contents, content, id=None):
-    contextUI = ''
-    if id != None:
-        contextUI = f'''
-            <li><a href="/update/{id}/">update</a></li>
-            <li><form action="/delete/{id}/" method="POST"><input type="submit" value="delete"></form></li>
-        '''
-    return f'''<!doctype html>
-    <html>
-        <body>
-            <h1><a href="/">WEB</a></h1>
-            <ol>
-                {contents}
-            </ol>
-            {content}
-            <ul>
-                <li><a href="/create/">create</a></li>
-                {contextUI}
-            </ul>
-        </body>
-    </html>
-    '''
+# POST메서드를 정의합니다.
+@app.route('/', methods=['POST'])
+def predict():
+    file = extract_img(request)
+    img_bytes = file.read()
+    # choice of the model
+    results = get_prediction(img_bytes,dictOfModels[request.form.get("model_choice")])
+    print(f'User selected model : {request.form.get("model_choice")}')
+    # updates results.imgs with boxes and labels
+    results.render()
+    # encoding the resulting image and return it
+    for img in results.imgs:
+        RGB_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        im_arr = cv2.imencode('.jpg', RGB_img)[1]
+        response = make_response(im_arr.tobytes())
+        response.headers['Content-Type'] = 'image/jpeg'
+    # return your image with boxes and labels
+    return response
 
+def extract_img(request):
+    # checking if image uploaded is valid
+    if 'file' not in request.files:
+        raise BadRequest("Missing file parameter!")
+    file = request.files['file']
+    if file.filename == '':
+        raise BadRequest("Given file is invalid")
+    return file
 
-def getContents():
-    liTags = ''
-    for topic in topics:
-        liTags = liTags + f'<li><a href="/read/{topic["id"]}/">{topic["title"]}</a></li>'
-    return liTags
+# 앱 시작:
+if __name__ == '__main__':
+    app.run(debug=True, host='5001')
 
-
-@app.route('/')
-def index():
-    return template(getContents(), '<h2>Welcome</h2>Hello, WEB')
-
-
-@app.route('/read/<int:id>/')
-def read(id):
-    title = ''
-    body = ''
-    for topic in topics:
-        if id == topic['id']:
-            title = topic['title']
-            body = topic['body']
-            break
-    return template(getContents(), f'<h2>{title}</h2>{body}', id)
-
-
-@app.route('/create/', methods=['GET', 'POST'])
-def create():
-    if request.method == 'GET': 
-        content = '''
-            <form action="/create/" method="POST">
-                <p><input type="text" name="title" placeholder="title"></p>
-                <p><textarea name="body" placeholder="body"></textarea></p>
-                <p><input type="submit" value="create"></p>
-            </form>
-        '''
-        return template(getContents(), content)
-    elif request.method == 'POST':
-        global nextId
-        title = request.form['title']
-        body = request.form['body']
-        newTopic = {'id': nextId, 'title': title, 'body': body}
-        topics.append(newTopic)
-        url = '/read/'+str(nextId)+'/'
-        nextId = nextId + 1
-        return redirect(url)
-
-
-@app.route('/update/<int:id>/', methods=['GET', 'POST'])
-def update(id):
-    if request.method == 'GET': 
-        title = ''
-        body = ''
-        for topic in topics:
-            if id == topic['id']:
-                title = topic['title']
-                body = topic['body']
-                break
-        content = f'''
-            <form action="/update/{id}/" method="POST">
-                <p><input type="text" name="title" placeholder="title" value="{title}"></p>
-                <p><textarea name="body" placeholder="body">{body}</textarea></p>
-                <p><input type="submit" value="update"></p>
-            </form>
-        '''
-        return template(getContents(), content)
-    elif request.method == 'POST':
-        global nextId
-        title = request.form['title']
-        body = request.form['body']
-        for topic in topics:
-            if id == topic['id']:
-                topic['title'] = title
-                topic['body'] = body
-                break
-        url = '/read/'+str(id)+'/'
-        return redirect(url)
-
-
-@app.route('/delete/<int:id>/', methods=['POST'])
-def delete(id):
-    for topic in topics:
-        if id == topic['id']:
-            topics.remove(topic)
-            break
-    return redirect('/')
-
-
-app.run(debug=True)
