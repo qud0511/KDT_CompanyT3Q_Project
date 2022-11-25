@@ -4,9 +4,9 @@ import streamlit as st
 
 logger = logging.getLogger()
 
-st.title("streamlit-webrtc demo!")
+st.title("두바퀴 지킴이")
 st.info(
-    """👈 Select the demo
+    """👈 Streamlit-YOLO v5
 """
 )
 

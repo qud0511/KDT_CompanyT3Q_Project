@@ -1,0 +1,49 @@
+T3Q 1팀 중간발표
+
+
+-----
+이든 이사님
+
+연구할 때 리서칭을 해보았나? -> 어느 산업군에서 어떻게 판매될 것인가를
+알아보았는가?  / 선행연구를 더 많이 찾아보고 도움 받아봐라
+
+--> 이번 프로젝트는 세상에 없던 것을 만드는 것을 시키지는 않을 것이다. 
+공항도로에서 이미 사용한다.
+시내버스에 카메라 노선도 측정, 고속도로관리공단에서도 사용하는 중일 것
+
+
+==> 지자체 도로정비, 공공의 목적으로 사용하기 위함..?
+
+
+
+
+
+주니온 배
+실시간으로 운전자에게 경보 제공은 아직 실현하기는 어렵지 않은가?
+(병준 - 오토바이 블랙박스 설치 의무화 등 법령이 앞으로도 계속 없다면..?)
+
+지금 현 상황에서 한다면 도로중앙관제센터 CCTV에서 디텍팅해서 보여주는 건
+가능하지 않나(CCTV로 보고 해당 위치를 찍어주는 등 )
+
+오토바이 운전자에게 바로 알려주는 기술을 너무 섣부른 말아닌가
+
+공공부문에 적용할 수 있는 서비스로 목표를 좁힐 것
+
+
+
+CNN-LSTM 모델을 이용한 도로 CCTV 영상의 강수량 판별 방법 = Determination of Precipitation from Road CCTV Video by Using CNN-LSTM
+Mask R-CNN을 이용한 항공 영상에서의 도로 균열 검출 = Crack Detection on the Road in Aerial Image using Mask R-CNN
+스케일 변화에 강인한 CNN 기반 항공영상에서의 건물 및 도로 검출 = Scale-invariant CNN for building and road detection from aerial images
+딥러닝 기반 포장도로 균열 심각도 관리 방안에 대한 연구 = A Study on the Crack Severity Management Method for Pavement based Deep Learning
+YOLO를 활용한 자전거 도로 유지보수 지원 시스템 = A Maintenance System for Bicycle Road Using YOLO
+--> 등 선행연구 더 찾아보자
+
+
+
+
+
+
+
+
+
+
