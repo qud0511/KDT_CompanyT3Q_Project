@@ -211,7 +211,35 @@ def main():
 
             return address            
                 
-                
+        # [ 지역 구별 주소 데이터프레임 함수 ]----------------------------------------------------
+        def createDF(gps_all):
+        # 위도,경도 -> 주소 변환
+            address_list = []
+            for i in range(len(gps_all)):
+
+                lat = gps_all['위도'][i]
+                lng = gps_all['경도'][i]
+                address = geocoding_reverse(f'{lat}, {lng}')
+
+                # 카테고리 선택 
+                if option =='대구 전체':
+                    address_list.append(address)
+                elif option in address[0]:
+                    address_list.append(address)
+
+            df = pd.DataFrame(address_list, columns=['주소','위치정보(위도,경도)'])
+
+            df_map = pd.DataFrame(columns=['주소','위도','경도'])
+            for i in range(len(df)):
+                df_map.loc[i] = [df.loc[i]['주소'],df.loc[i][1][0],df.loc[i][1][1]]
+
+            # 위도,경도 주소변환 데이터프레임 시각화
+            st.dataframe(df)
+
+            # 해당 지역 위치정보 개수 표기
+            st.write(option,'지역, 보수가 필요한 구역: ',len(df),'개')
+
+            return df_map                
 
         # [ 지도 함수 실행 코드 ]------------------------------------------------------------------------
 
