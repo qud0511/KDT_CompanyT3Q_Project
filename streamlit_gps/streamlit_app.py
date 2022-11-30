@@ -127,7 +127,8 @@ def geocoding_reverse(lat_lng_str):
 def createDF(gps_all):
 # 위도,경도 -> 주소 변환
     address_list = []
-    for i in range(len(gps_all)):                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+    for i in range(len(gps_all)):
+        
         lat = gps_all['위도'][i]
         lng = gps_all['경도'][i]
         address = geocoding_reverse(f'{lat}, {lng}')
@@ -156,7 +157,6 @@ def createDF(gps_all):
 # pip install streamlit-aggrid -> 상호작용 모듈
 
 # [ 지도 함수 실행 코드 ]------------------------------------------------------------------------
-from st_aggrid import AgGrid
 
 # 실시간 위치정보 수집
 gps = current_location()
@@ -166,7 +166,6 @@ add_gps_all(gps)
 
 # 최종 수정된 전체 위치정보 파일 불러오기
 gps_all = pd.read_csv('gps_all.csv')
-AgGrid(gps_all)
 
 # 주소 데이터프레임 표시
 df_map = createDF(gps_all) 
