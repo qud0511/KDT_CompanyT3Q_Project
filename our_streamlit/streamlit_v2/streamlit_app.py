@@ -179,7 +179,7 @@ def main():
                 # Deck 클래스 인스턴스 생성
                 deck = pdk.Deck(height=100,
                                 #width=1000,
-                                map_style=None, 
+                                map_style='road', 
                                 initial_view_state=pdk.ViewState(longitude=lo, 
                                                                 latitude=la, 
                                                                 zoom=12, 
