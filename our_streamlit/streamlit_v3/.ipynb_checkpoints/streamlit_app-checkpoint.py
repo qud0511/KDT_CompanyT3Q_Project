@@ -146,7 +146,7 @@ def main():
             data = data_c.copy()
 
             # 아이콘 이미지 불러오기
-            ICON_URL = "https://cdn-icons-png.flaticon.com/128/2268/2268142.png"
+            ICON_URL = "https://cdn-icons-png.flaticon.com/512/2711/2711648.png"
             icon_data = {
                 # Icon from Wikimedia, used the Creative Commons Attribution-Share Alike 3.0
                 # Unported, 2.5 Generic, 2.0 Generic and 1.0 Generic licenses
@@ -179,7 +179,7 @@ def main():
                 # Deck 클래스 인스턴스 생성
                 deck = pdk.Deck(height=100,
                                 #width=1000,
-                                map_style=None, 
+                                map_style='road', 
                                 initial_view_state=pdk.ViewState(longitude=lo, 
                                                                 latitude=la, 
                                                                 zoom=12, 
