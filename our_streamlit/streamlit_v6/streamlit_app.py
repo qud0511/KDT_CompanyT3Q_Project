@@ -13,7 +13,7 @@ from geopy.geocoders import Nominatim
 from st_aggrid import AgGrid, GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
 import tempfile
-from streamlit.cli import main
+# from streamlit.cli import main
 import time
 # 레이아웃 관련
 st.set_page_config(layout="wide")
