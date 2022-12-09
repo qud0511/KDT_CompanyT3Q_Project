@@ -12,7 +12,9 @@ from pyparsing import empty
 from geopy.geocoders import Nominatim
 from st_aggrid import AgGrid, GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
-
+import tempfile
+# from streamlit.cli import main
+import time
 # 레이아웃 관련
 st.set_page_config(layout="wide")
 
@@ -51,28 +53,11 @@ def login_user(username, password):
 def main():
     # st.title("로그인 기능 테스트")
 
-    menu = ["Login", "signUp", "Dectection", "Map"]
+    menu = [ "signUp", "Login", "Dectection", "Map", 'LiveCam']
     choice = st.sidebar.selectbox("MENU", menu)
 
-    if choice == "Login":
-        st.subheader("로그인 해주세요")
-
-        username = st.sidebar.text_input("유저명을 입력해주세요")
-        password = st.sidebar.text_input("비밀번호를 입력해주세요", type='password')
-        if st.sidebar.checkbox("Login"):
-            create_user()
-            hashed_pswd = make_hashes(password)
-
-            result = login_user(username, check_hashes(password, hashed_pswd))
-            if result:
-
-                st.success("{}님으로 로그인했습니다.".format(username))
-
-            else:
-                st.warning("사용자 이름이나 비밀번호가 잘못되었습니다.")
-
-    elif choice == "signUp":
-        st.subheader("새 계정을 만듭니다.")
+    if choice == "signUp":
+        st.subheader("새 계정을 만듭니다")
         new_user = st.text_input("유저명을 입력해주세요")
         new_password = st.text_input("비밀번호를 입력해주세요", type='password')
 
@@ -82,43 +67,177 @@ def main():
             st.success("계정 생성에 성공했습니다.")
             st.info("로그인 화면에서 로그인 해주세요.")
 
+    elif choice == "Login":
+        st.subheader("로그인 해주세요")
+
+        username = st.text_input("유저명을 입력해주세요")
+        password = st.text_input("비밀번호를 입력해주세요", type='password')
+        if st.button("Login"):
+            create_user()
+            hashed_pswd = make_hashes(password)
+
+            result = login_user(username, check_hashes(password, hashed_pswd))
+            if result:
+
+                st.success("{}님으로 로그인했습니다.".format(username))
+
+            else:
+                st.warning("사용자 이름이나 비밀번호가 잘못되었습니다.")        
+
+
     # Detection 탭
     elif choice == "Dectection":
-        st.subheader("위험물 탐지")
+        st.header('위험물 탐지')
         selected_item = st.sidebar.radio("select", ("Image", "Video"))
         st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
         # Image 업로드 탭
         if selected_item == "Image":
             file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'])
             if file != None:
+                col1, col2, col3 = st.columns([4,0.8,4])
                 img = Image.open(file)
                 img.save('./temp/temp.png', 'PNG')
-                st.image(img)
-                if st.button("추론 결과"):
-                    img_result, video_result = detect.run(source=f'./temp/temp.png')
-                    st.image(img_result)
+                with col1:
+                    html='<h2>원본 이미지<h2>'
+                    st.components.v1.html(html="<center>" + html + "</center>", height=48)
+                    st.image(img)
+                with col2:
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    if st.button("추론 결과"):
+                        with st.empty():
+                            for seconds in range(1):
+                                st.components.v1.html(html="<center>" +'⏳' + "</center>")
+                                time.sleep(1)
+                            st.components.v1.html(html="<center>" +'✔️' + "</center>")                                                
+                            img_result, video_result = detect.run(source=f'./temp/temp.png')
+                        with col3:
+                            html='<h2>탐지된 이미지<h2>'
+                            st.components.v1.html(html="<center>" + html + "</center>", height=48)
+                            st.image(img_result)
         # Video 업로드 탭
         elif selected_item == "Video":
-            selected_video = st.radio(label="영상을 선택해주세요.", options=['1', '2', '3', '4'])
+            #html='<h3>영상을 선택해주세요<h3>'
+            #st.components.v1.html(html=html, height=50)
+            selected_video = st.radio(label='영상을 선택해주세요', options=['1', '2', '3', '4'])
             st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
+            col1, col2, col3 = st.columns([4.3,0.8,4.3])
+            
             if selected_video == "1":
-                st.video('./temp/temp_1.mp4', start_time=0)
-                if st.button("추론 결과"):
+                with col1:
+                    html='<h2>원본 영상<h2>'
+                    st.components.v1.html(html="<center>" + html + "</center>", height=48)           
+                    st.video('./temp/temp_1.mp4', start_time=0)
+                with col2:
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                with col2:
+                    #m = st.markdown("""<div style=" text-align: center;"> <button style=" display: inline-block;">버튼클릭!!</button> </div>""", unsafe_allow_html=True)
+                    if st.button("추론결과"):  
+                        with st.empty():
+                            for seconds in range(1):
+                                st.components.v1.html(html="<center>" +'⏳' + "</center>")
+                                time.sleep(1)
+                            st.components.v1.html(html="<center>" +'✔️' + "</center>")                            
                     # img_result, video_result = detect.run(source=f'./temp/temp_1_result.mp4')
-                    st.video('./temp/temp_1_result.mp4', 'rb', start_time=0)
+                        with col3: 
+                            html='<h2>탐지된 영상<h2>'
+                            st.components.v1.html(html="<center>" + html + "</center>", height=48) 
+                            st.video('./temp/temp_1_result.mp4', 'rb', start_time=0)
             elif selected_video == "2":
-                st.video('./temp/temp_1.mp4', start_time=0)
-                if st.button("추론 결과"):
+                with col1:
+                    html='<h2>원본 영상<h2>'
+                    st.components.v1.html(html="<center>" + html + "</center>", height=48)           
                     st.video('./temp/temp_1.mp4', start_time=0)
+                with col2:
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                with col2:
+                    if st.button("추론결과"):  
+                        with st.empty():
+                            for seconds in range(1):
+                                st.components.v1.html(html="<center>" +'⏳' + "</center>")
+                                time.sleep(1)
+                            st.components.v1.html(html="<center>" +'✔️' + "</center>") 
+                    # img_result, video_result = detect.run(source=f'./temp/temp_1_result.mp4')
+                        with col3: 
+                            html='<h2>탐지된 영상<h2>'
+                            st.components.v1.html(html="<center>" + html + "</center>", height=48) 
+                            st.video('./temp/temp_1_result.mp4', 'rb', start_time=0)
             elif selected_video == "3":
-                st.video('./temp/temp_1.mp4', start_time=0)
-                if st.button("추론 결과"):
+                with col1:
+                    html='<h2>원본 영상<h2>'
+                    st.components.v1.html(html="<center>" + html + "</center>", height=48)           
                     st.video('./temp/temp_1.mp4', start_time=0)
+                with col2:
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                with col2:
+                    if st.button("추론결과"):  
+                        with st.empty():
+                            for seconds in range(1):
+                                st.components.v1.html(html="<center>" +'⏳' + "</center>")
+                                time.sleep(1)
+                            st.components.v1.html(html="<center>" +'✔️' + "</center>") 
+                    # img_result, video_result = detect.run(source=f'./temp/temp_1_result.mp4')
+                        with col3: 
+                            html='<h2>탐지된 영상<h2>'
+                            st.components.v1.html(html="<center>" + html + "</center>", height=48) 
+                            st.video('./temp/temp_1_result.mp4', 'rb', start_time=0)         
             elif selected_video == "4":
-                st.video('./temp/temp_1.mp4', start_time=0)
-                if st.button("추론 결과"):
+                with col1:
+                    html='<h2>원본 영상<h2>'
+                    st.components.v1.html(html="<center>" + html + "</center>", height=48)           
                     st.video('./temp/temp_1.mp4', start_time=0)
+                with col2:
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                    st.header('    ')
+                with col2:
+                    if st.button("추론결과"):  
+                        with st.empty():
+                            for seconds in range(1):
+                                st.components.v1.html(html="<center>" +'⏳' + "</center>")
+                                time.sleep(1)
+                            st.components.v1.html(html="<center>" +'✔️' + "</center>") 
+                    # img_result, video_result = detect.run(source=f'./temp/temp_1_result.mp4')
+                        with col3: 
+                            html='<h2>탐지된 영상<h2>'
+                            st.components.v1.html(html="<center>" + html + "</center>", height=48) 
+                            st.video('./temp/temp_1_result.mp4', 'rb', start_time=0)
+    elif choice == "LiveCam":
+        st.title("Webcam Live Feed")
+        run = st.checkbox('Run')        
+        #result = detect.run(source=f'./123.mp4')
+        #st.video(result)
 
+        FRAME_WINDOW = st.image([])
+        camera = cv2.VideoCapture()
+        while run:
+            _, frame = camera.read()
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            FRAME_WINDOW.image(frame)
+        else:
+            st.write('Stopped')
 
     elif choice == "Map":
         option = st.sidebar.selectbox(
@@ -136,9 +255,14 @@ def main():
                 crd = {float(location["geoplugin_latitude"]), float(location["geoplugin_longitude"])}
                 crd = list(crd)
                 gps = pd.DataFrame([[crd[1], crd[0]]], columns=['위도', '경도'])
-
             return gps
-
+        #실시간 위치정보 수집(시연용) - 경북대학교
+        def geocoding():
+            geolocoder = Nominatim(user_agent = 'South Korea', timeout=None)
+            geo = geolocoder.geocode("대구 북구 경북대학교 글로벌플라자")
+            crd = {"lat": str(geo.latitude), "lng": str(geo.longitude)}
+            gps = pd.DataFrame( [[crd['lat'],crd['lng']]], columns=['위도','경도'])
+            return gps
         # 맵에 위치 표시 ------------------------------------------------------------------------------------------
 
         # 위치정보 상세 (단, data에 위도, 경도 컬럼이 있어야 함)
@@ -243,12 +367,12 @@ def main():
             return df_map                
 
         # [ 지도 함수 실행 코드 ]------------------------------------------------------------------------
-
+##############
+        if st.sidebar.button('현재 위치 추가'):
         # 실시간 위치정보 수집
-        gps = current_location()
-
-        # 기존 위치정보데이터에 실시간 위치정보 추가 갱신
-        add_gps_all(gps)
+            gps=geocoding()
+            # 기존 위치정보데이터에 실시간 위치정보 추가 갱신
+            add_gps_all(gps)
 
         # 최종 수정된 전체 위치정보 파일 불러오기
         gps_all = pd.read_csv('gps_all.csv')
@@ -278,7 +402,6 @@ def main():
         col1, col2 = st.columns(2)
         with col1:
             selection = aggrid_interactive_table(df_map)
-        with col2:
             try:
                 if selection:
                 # df 위/경도 뽑기
