@@ -18,6 +18,7 @@ import time
 # 레이아웃 관련
 st.set_page_config(layout="wide")
 
+# -
 # 로그인 화면
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
@@ -53,10 +54,10 @@ def login_user(username, password):
 def main():
     # st.title("로그인 기능 테스트")
 
-    menu = [ "signUp", "📌 Login", "⚠️ Dectection", "🗺️ Map", 'LiveCam']
+    menu = [ "회원가입", "📌 로그인", "⚠️ Dectection", "🗺️ 포트홀 등 도로손상 현황", 'LiveCam']
     choice = st.sidebar.selectbox("MENU", menu)
 
-    if choice == "signUp":
+    if choice == "회원가입":
         st.subheader("새 계정을 만듭니다")
         new_user = st.text_input("유저명을 입력해주세요")
         new_password = st.text_input("비밀번호를 입력해주세요", type='password')
@@ -67,7 +68,7 @@ def main():
             st.success("계정 생성에 성공했습니다.")
             st.info("로그인 화면에서 로그인 해주세요.")
 
-    elif choice == "📌 Login":
+    elif choice == "📌 로그인":
         st.subheader("로그인 해주세요")
 
         username = st.text_input("유저명을 입력해주세요")
@@ -92,7 +93,7 @@ def main():
         st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
         # Image 업로드 탭
         if selected_item == "Image":
-            file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'])
+            file = st.file_uploader("사진을 업로드하세요", type=['jpg', 'png', 'jpeg'])
             if file != None:
                 col1, col2, col3 = st.columns([4,0.8,4])
                 img = Image.open(file)
@@ -121,9 +122,9 @@ def main():
                             st.image(img_result)
         # Video 업로드 탭
         elif selected_item == "Video":
-            #html='<h3>영상을 선택해주세요<h3>'
+            #html='<h3>영상을 업로드하세요<h3>'
             #st.components.v1.html(html=html, height=50)
-            selected_video = st.radio(label='영상을 선택해주세요', options=['1', '2', '3', '4'])
+            selected_video = st.radio(label='영상을 업로드하세요', options=['1', '2', '3', '4'])
             st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
             col1, col2, col3 = st.columns([4.3,0.8,4.3])
             
@@ -239,7 +240,7 @@ def main():
         else:
             st.write('Stopped')
 
-    elif choice == "🗺️ Map":
+    elif choice == "🗺️ 포트홀 등 도로손상 현황":
         option = st.sidebar.selectbox(
             '어떤 지역을 고르시겠습니까?',
             ('대구 전체','북구', '중구', '서구', '동구',"남구", "수성구", "달서구", "달성군"))   
@@ -408,8 +409,8 @@ def main():
                     #st.write("보수가 필요한 포트홀")
                     #st.write('위도: ', selection['selected_rows'][0]['위도'], '경도: ', selection['selected_rows'][0]['경도'])
                     for i in range(1,8):
-                        if selection['selected_rows'][0]['위도'] == selection['selected_rows'][i]:
-                            img=Image.open(f"./result/{i}.jpg")
+                        if selection['selected_rows'][0]['위도'] == 35.84769930412541:
+                            img=Image.open(f"./result/{os.listdir('./result/')[i]}")
                             st.image(img)
                             
             except:
