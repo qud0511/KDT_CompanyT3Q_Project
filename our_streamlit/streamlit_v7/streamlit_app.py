@@ -53,7 +53,7 @@ def login_user(username, password):
 def main():
     # st.title("로그인 기능 테스트")
 
-    menu = [ "signUp", "Login", "Dectection", "Map", 'LiveCam']
+    menu = [ "signUp", "📌 Login", "⚠️ Dectection", "🗺️ Map", 'LiveCam']
     choice = st.sidebar.selectbox("MENU", menu)
 
     if choice == "signUp":
@@ -67,7 +67,7 @@ def main():
             st.success("계정 생성에 성공했습니다.")
             st.info("로그인 화면에서 로그인 해주세요.")
 
-    elif choice == "Login":
+    elif choice == "📌 Login":
         st.subheader("로그인 해주세요")
 
         username = st.text_input("유저명을 입력해주세요")
@@ -86,8 +86,8 @@ def main():
 
 
     # Detection 탭
-    elif choice == "Dectection":
-        st.header('위험물 탐지')
+    elif choice == "⚠️ Dectection":
+        st.header('⚠ 도로 위 위험물 탐지 ⚠')
         selected_item = st.sidebar.radio("select", ("Image", "Video"))
         st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
         # Image 업로드 탭
@@ -239,7 +239,7 @@ def main():
         else:
             st.write('Stopped')
 
-    elif choice == "Map":
+    elif choice == "🗺️ Map":
         option = st.sidebar.selectbox(
             '어떤 지역을 고르시겠습니까?',
             ('대구 전체','북구', '중구', '서구', '동구',"남구", "수성구", "달서구", "달성군"))   
@@ -407,27 +407,11 @@ def main():
                 # df 위/경도 뽑기
                     #st.write("보수가 필요한 포트홀")
                     #st.write('위도: ', selection['selected_rows'][0]['위도'], '경도: ', selection['selected_rows'][0]['경도'])
-                    if selection['selected_rows'][0]['위도'] == 35.812507:
-                        img=Image.open(r'.\result\1.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.832596089:
-                        img=Image.open(r'.\result\2.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.88249341:
-                        img=Image.open(r'.\result\3.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.86262305:
-                        img=Image.open(r'.\result\4.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.8428000942:
-                        img=Image.open(r'.\result\5.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.8723688469:
-                        img=Image.open(r'.\result\7.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.8920472:
-                        img=Image.open(r'.\result\8.jpg')
-                        st.image(img)
+                    for i in range(1,8):
+                        if selection['selected_rows'][0]['위도'] == selection['selected_rows'][i]:
+                            img=Image.open(f"./result/{i}.jpg")
+                            st.image(img)
+                            
             except:
                 pass
 
