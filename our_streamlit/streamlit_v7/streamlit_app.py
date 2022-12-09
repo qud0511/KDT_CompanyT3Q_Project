@@ -408,9 +408,9 @@ def main():
                 # df 위/경도 뽑기
                     #st.write("보수가 필요한 포트홀")
                     #st.write('위도: ', selection['selected_rows'][0]['위도'], '경도: ', selection['selected_rows'][0]['경도'])
-                    for i in range(1,8):
-                        if selection['selected_rows'][0]['위도'] == df_map.iloc[i][0]:
-                            img=Image.open(f'./result/{i}.jpg')
+                    for i in range(1,56):
+                        if selection['selected_rows'][i-1]['위도'] == gps_all.iloc[i-1][0]:
+                            img=Image.open(f"./result/{os.listdir('./result/')[i]}")
                             st.image(img)
                             
             except:
