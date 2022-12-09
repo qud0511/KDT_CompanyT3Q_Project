@@ -409,8 +409,8 @@ def main():
                     #st.write("보수가 필요한 포트홀")
                     #st.write('위도: ', selection['selected_rows'][0]['위도'], '경도: ', selection['selected_rows'][0]['경도'])
                     for i in range(1,8):
-                        if selection['selected_rows'][0]['위도'] == 35.84769930412541:
-                            img=Image.open(f"./result/{os.listdir('./result/')[i]}")
+                        if selection['selected_rows'][0]['위도'] == df_map.iloc[i][0]:
+                            img=Image.open(f'./result/{i}.jpg')
                             st.image(img)
                             
             except:
