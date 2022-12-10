@@ -289,8 +289,6 @@ def main():
             layers = [
                 pdk.Layer(
                     type="IconLayer",
-                    'HexagonLayer',
-                    df,
                     data=data,
                     get_icon="icon_data",
                     get_size=4,
@@ -364,12 +362,30 @@ def main():
                 df_map.loc[i] = [df.loc[i]['주소'],df.loc[i][1][0],df.loc[i][1][1]]
 
             # 위도,경도 주소변환 데이터프레임 시각화
-            # st.dataframe(df)
+            st.dataframe(df)
 
             # 해당 지역 위치정보 개수 표기
             st.write(option,'지역, 보수가 필요한 구역: ',len(df),'개')
 
-            return df_map                
+            return df_map
+        
+        # 데이터프레임 상호작용 함수
+        def aggrid_interactive_table(df):
+            options = GridOptionsBuilder.from_dataframe(
+                df,  enableRowGroup=True, enableValue=True, enablePivot=True
+            )
+            options.configure_side_bar()
+
+            options.configure_selection('single')
+            selection = AgGrid(
+                df,
+                enable_enterprise_modules=True,
+                gridOptions=options.build(),
+                update_mode=GridUpdateMode.MODEL_CHANGED,
+                allow_unsafe_jscode=True
+            )
+
+            return selection
 
         # [ 지도 함수 실행 코드 ]------------------------------------------------------------------------
 ##############
@@ -387,23 +403,8 @@ def main():
         # 전체 위치정보 웹 지도에 표시
         location_detail(df_map)
         
-        def aggrid_interactive_table(df):
-            options = GridOptionsBuilder.from_dataframe(
-                df,  enableRowGroup=True, enableValue=True, enablePivot=True
-            )
-            options.configure_side_bar()
 
-            options.configure_selection('single')
-            selection = AgGrid(
-                df,
-                enable_enterprise_modules=True,
-                gridOptions=options.build(),
-                update_mode=GridUpdateMode.MODEL_CHANGED,
-                allow_unsafe_jscode=True,
-            )
-
-            return selection
-
+        # Ag-Grid
         col1, col2 = st.columns(2)
         with col1:
             selection = aggrid_interactive_table(df_map)
@@ -419,6 +420,7 @@ def main():
                             
             except:
                 pass
+        
 
 if __name__ == '__main__':
     main()
