@@ -67,6 +67,7 @@ def main():
             add_user(new_user, make_hashes(new_password))
             st.success("계정 생성에 성공했습니다.")
             st.info("로그인 화면에서 로그인 해주세요.")
+            st.balloons() 
 
     elif choice == "📌 로그인":
         st.subheader("로그인 해주세요")
@@ -81,6 +82,7 @@ def main():
             if result:
 
                 st.success("{}님으로 로그인했습니다.".format(username))
+                st.balloons() 
 
             else:
                 st.warning("사용자 이름이나 비밀번호가 잘못되었습니다.")        
@@ -243,7 +245,7 @@ def main():
     elif choice == "🗺️ 포트홀 등 도로손상 현황":
         option = st.sidebar.selectbox(
             '어떤 지역을 고르시겠습니까?',
-            ('대구 전체','북구', '중구', '서구', '동구',"남구", "수성구", "달서구", "달성군"))   
+            ('대구 전체','북구', '중구', '서구', '동구',"남구", "수성구", "달서구", "달성군"))
         
         # 현재위치 좌표 얻기
         def current_location():
@@ -310,7 +312,7 @@ def main():
                                 map_style='road', 
                                 initial_view_state=pdk.ViewState(longitude=lo, 
                                                                 latitude=la, 
-                                                                zoom=12, 
+                                                                zoom=15, 
                                                                 pitch=50), 
                                 layers=layers,
                                 tooltip={"text":"{주소}\n{위도}/{경도}"})
@@ -414,9 +416,28 @@ def main():
                 # df 위/경도 뽑기
                     #st.write("보수가 필요한 포트홀")
                     #st.write('위도: ', selection['selected_rows'][0]['위도'], '경도: ', selection['selected_rows'][0]['경도'])
-                    for i in range(1,56):
-                        if selection['selected_rows'][i-1]['위도'] == gps_all.iloc[i-1][0]:
-                            st.image(Image.open(f"./result/{os.listdir('./result/')[i]}"))
+
+                    if selection['selected_rows'][0][0]:
+                        img=Image.open(r'.\result\1.jpg')
+                        st.image(img)
+                    if selection['selected_rows'][0]['위도'] == 35.832596089:
+                        img=Image.open(r'.\result\2.jpg')
+                        st.image(img)
+                    if selection['selected_rows'][0]['위도'] == 35.88249341:
+                        img=Image.open(r'.\result\3.jpg')
+                        st.image(img)
+                    if selection['selected_rows'][0]['위도'] == 35.86262305:
+                        img=Image.open(r'.\result\4.jpg')
+                        st.image(img)
+                    if selection['selected_rows'][0]['위도'] == 35.8428000942:
+                        img=Image.open(r'.\result\5.jpg')
+                        st.image(img)
+                    if selection['selected_rows'][0]['위도'] == 35.8723688469:
+                        img=Image.open(r'.\result\7.jpg')
+                        st.image(img)
+                    if selection['selected_rows'][0]['위도'] == 35.8920472:
+                        img=Image.open(r'.\result\8.jpg')
+                        st.image(img)
                             
             except:
                 pass
