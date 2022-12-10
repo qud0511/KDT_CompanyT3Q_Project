@@ -289,12 +289,16 @@ def main():
             layers = [
                 pdk.Layer(
                     type="IconLayer",
+                    'HexagonLayer',
+                    df,
                     data=data,
                     get_icon="icon_data",
                     get_size=4,
                     size_scale=15,
-                    get_position="[경도, 위도]",
+                    get_position=['경도', '위도'],
                     pickable=True,
+                    auto_highlight=True,
+                    extruded=True
                 )
             ]
             
@@ -403,6 +407,7 @@ def main():
         col1, col2 = st.columns(2)
         with col1:
             selection = aggrid_interactive_table(df_map)
+        with col2:
             try:
                 if selection:
                 # df 위/경도 뽑기
@@ -410,8 +415,7 @@ def main():
                     #st.write('위도: ', selection['selected_rows'][0]['위도'], '경도: ', selection['selected_rows'][0]['경도'])
                     for i in range(1,56):
                         if selection['selected_rows'][i-1]['위도'] == gps_all.iloc[i-1][0]:
-                            img=Image.open(f"./result/{os.listdir('./result/')[i]}")
-                            st.image(img)
+                            st.image(Image.open(f"./result/{os.listdir('./result/')[i]}"))
                             
             except:
                 pass
