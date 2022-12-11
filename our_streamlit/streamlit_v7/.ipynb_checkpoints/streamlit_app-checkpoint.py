@@ -53,6 +53,7 @@ def login_user(username, password):
 # st.sidebar("WO 이륜차 위험물 감지 서비스")
 
 def main():
+    st.sidebar.title('WO-T3Q1')
     menu = [ "📎 회원가입", "📌 로그인", "⚠️ Dectection", "🗺️ WO Map"]
     choice = st.sidebar.selectbox("MENU", menu)
 
