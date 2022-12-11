@@ -421,6 +421,17 @@ def main():
                         img=Image.open(r'.\result\1.jpg')
                         st.image(img)
                     if selection['selected_rows'][0]['위도'] == 35.832596089:
+                        deck = pdk.Deck(height=100,
+                                #width=1000,
+                                map_style='road', 
+                                initial_view_state=pdk.ViewState(longitude=lo, 
+                                                                latitude=la, 
+                                                                zoom=15, 
+                                                                pitch=50), 
+                                layers=layers,
+                                tooltip={"text":"{주소}\n{위도}/{경도}"})
+
+                        st.pydeck_chart(deck, use_container_width=True)
                         img=Image.open(r'.\result\2.jpg')
                         st.image(img)
                     if selection['selected_rows'][0]['위도'] == 35.88249341:
