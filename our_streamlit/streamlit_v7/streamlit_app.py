@@ -301,8 +301,35 @@ def main():
                     extruded=True
                 )
             ]
-            
-            
+            view_state = pdk.ViewState(longitude=lo, 
+                                        latitude=la, 
+                                        zoom=12, 
+                                        pitch=50)
+            # ============================================================================================================
+            # Ag-Grid
+            col1, col2 = st.columns(2)
+            with col1:
+                
+                selection = aggrid_interactive_table(df_map)
+            with col2:
+                try:
+                    if selection:
+                        # st.write(selection["selected_rows"][0]["_selectedRowNodeInfo"]["nodeRowIndex"])
+                        img=Image.open(f'./result/{int(selection["selected_rows"][0]["_selectedRowNodeInfo"]["nodeRowIndex"])}.jpg')
+                        img = img.resize((500, 200))
+                        st.image(img, use_column_width=True)
+                        
+                        view_state = pdk.ViewState(longitude=selection['selected_rows'][0]['경도'], 
+                                            latitude=selection['selected_rows'][0]['위도'], 
+                                            zoom=17, 
+                                            pitch=50)
+                        deck.initial_view_state = view_state
+                        deck.update()
+
+                        
+                except:
+                    pass
+            # ============================================================================================================
             if len(data_c) == 0:
                 pass
             else:
@@ -310,14 +337,12 @@ def main():
                 deck = pdk.Deck(height=100,
                                 #width=1000,
                                 map_style='road', 
-                                initial_view_state=pdk.ViewState(longitude=lo, 
-                                                                latitude=la, 
-                                                                zoom=15, 
-                                                                pitch=50), 
+                                initial_view_state=view_state, 
                                 layers=layers,
                                 tooltip={"text":"{주소}\n{위도}/{경도}"})
-
+                
                 st.pydeck_chart(deck, use_container_width=True)
+                
                 
         # [ gps 데이터셋 갱신 및 누적 함수 ]--------------------------------------------------
         def add_gps_all(gps):
@@ -364,7 +389,7 @@ def main():
                 df_map.loc[i] = [df.loc[i]['주소'],df.loc[i][1][0],df.loc[i][1][1]]
 
             # 위도,경도 주소변환 데이터프레임 시각화
-            st.dataframe(df)
+            # st.dataframe(df)
 
             # 해당 지역 위치정보 개수 표기
             st.write(option,'지역, 보수가 필요한 구역: ',len(df),'개')
@@ -384,7 +409,8 @@ def main():
                 enable_enterprise_modules=True,
                 gridOptions=options.build(),
                 update_mode=GridUpdateMode.MODEL_CHANGED,
-                allow_unsafe_jscode=True
+                allow_unsafe_jscode=True,
+                height=300
             )
 
             return selection
@@ -404,55 +430,6 @@ def main():
         df_map = createDF(gps_all) 
         # 전체 위치정보 웹 지도에 표시
         location_detail(df_map)
-        
-
-        # Ag-Grid
-        col1, col2 = st.columns(2)
-        with col1:
-            selection = aggrid_interactive_table(df_map)
-        with col2:
-            try:
-                if selection:
-                # df 위/경도 뽑기
-                    #st.write("보수가 필요한 포트홀")
-                    #st.write('위도: ', selection['selected_rows'][0]['위도'], '경도: ', selection['selected_rows'][0]['경도'])
-
-                    if selection['selected_rows'][0][0]:
-                        img=Image.open(r'.\result\1.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.832596089:
-                        deck = pdk.Deck(height=100,
-                                #width=1000,
-                                map_style='road', 
-                                initial_view_state=pdk.ViewState(longitude=lo, 
-                                                                latitude=la, 
-                                                                zoom=15, 
-                                                                pitch=50), 
-                                layers=layers,
-                                tooltip={"text":"{주소}\n{위도}/{경도}"})
-
-                        st.pydeck_chart(deck, use_container_width=True)
-                        img=Image.open(r'.\result\2.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.88249341:
-                        img=Image.open(r'.\result\3.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.86262305:
-                        img=Image.open(r'.\result\4.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.8428000942:
-                        img=Image.open(r'.\result\5.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.8723688469:
-                        img=Image.open(r'.\result\7.jpg')
-                        st.image(img)
-                    if selection['selected_rows'][0]['위도'] == 35.8920472:
-                        img=Image.open(r'.\result\8.jpg')
-                        st.image(img)
-                            
-            except:
-                pass
-        
-
+    
 if __name__ == '__main__':
     main()
