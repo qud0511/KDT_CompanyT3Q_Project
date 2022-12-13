@@ -67,7 +67,7 @@ def main():
             add_user(new_user, make_hashes(new_password))
             st.success("Watch Out 서비스를 이용해주셔서 감사합니다.")
             st.info("로그인 화면에서 로그인 해주세요.")
-            st.balloons() 
+            # st.balloons() 
 
     elif choice == "📌 로그인":
         st.subheader("📌 로그인 해주세요")
