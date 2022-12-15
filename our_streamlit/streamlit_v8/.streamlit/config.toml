@@ -1,0 +1,4 @@
+# config.toml 파일
+[theme]
+primaryColor="green" 			# theme
+secondaryBackgroundColor="skyblue" 		# side bar
